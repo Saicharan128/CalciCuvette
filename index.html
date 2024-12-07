@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #2d2d53;
+            margin: 0;
+        }
+
+        .calculator {
+            background-color: #2d2d53;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 280px;
+        }
+
+        .screen {
+            background-color: #333;
+            color: white;
+            font-size: 36px;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .button {
+            background-color: #e8e8e8;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:active {
+            background-color: #c0c0c0;
+        }
+
+        .button-blue {
+            background-color: #787e84;
+            color: white;
+        }
+
+        .button-red {
+            background-color: #f54e42;
+            color: white;
+        }
+
+        .button-blue:active {
+            background-color: #3d6580;
+        }
+
+        .button-red:active {
+            background-color: #d74333;
+        }
+
+        .button:disabled {
+            background-color: #b0b0b0;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="calculator">
+        <div class="screen" id="screen">0</div>
+        <div class="buttons">
+            <button class="button button-blue" onclick="appendNumber('7')">7</button>
+            <button class="button button-blue" onclick="appendNumber('8')">8</button>
+            <button class="button button-blue" onclick="appendNumber('9')">9</button>
+            <button class="button button-blue" onclick="deleteLast()">DEL</button>
+            <button class="button button-blue" onclick="appendNumber('4')">4</button>
+            <button class="button button-blue" onclick="appendNumber('5')">5</button>
+            <button class="button button-blue" onclick="appendNumber('6')">6</button>
+            <button class="button button-blue" onclick="appendOperator('+')">+</button>
+            <button class="button button-blue" onclick="appendNumber('1')">1</button>
+            <button class="button button-blue" onclick="appendNumber('2')">2</button>
+            <button class="button button-blue" onclick="appendNumber('3')">3</button>
+            <button class="button button-blue" onclick="appendOperator('-')">-</button>
+            <button class="button button-blue" onclick="appendNumber('.')">.</button>
+            <button class="button button-blue" onclick="appendNumber('0')">0</button>
+            <button class="button button-blue" onclick="appendOperator('/')">/</button>
+            <button class="button button-blue" onclick="appendOperator('*')">x</button>
+            <button class="button button-red" onclick="calculateResult()">=</button>
+            <button class="button button-blue" onclick="resetScreen()">RESET</button>
+        </div>
+    </div>
+
+    <script>
+        let screen = document.getElementById('screen');
+        let currentInput = '0';
+        let operator = null;
+        let firstOperand = null;
+
+        // Append number to the screen
+        function appendNumber(number) {
+            if (currentInput === '0') {
+                currentInput = number;
+            } else {
+                currentInput += number;
+            }
+            screen.innerText = currentInput;
+        }
+
+        // Append operator (+, -, *, /)
+        function appendOperator(op) {
+            if (firstOperand === null) {
+                firstOperand = currentInput;
+            } else if (operator !== null) {
+                calculateResult();
+                firstOperand = currentInput;
+            }
+            operator = op;
+            currentInput = '';
+        }
+
+        // Delete last character
+        function deleteLast() {
+            currentInput = currentInput.slice(0, -1);
+            if (currentInput === '') {
+                currentInput = '0';
+            }
+            screen.innerText = currentInput;
+        }
+
+        // Reset screen to initial state
+        function resetScreen() {
+            currentInput = '0';
+            operator = null;
+            firstOperand = null;
+            screen.innerText = currentInput;
+        }
+
+        // Calculate the result
+        function calculateResult() {
+            if (firstOperand === null || currentInput === '') return;
+
+            let result;
+            const first = parseFloat(firstOperand);
+            const second = parseFloat(currentInput);
+
+            switch (operator) {
+                case '+':
+                    result = first + second;
+                    break;
+                case '-':
+                    result = first - second;
+                    break;
+                case '*':
+                    result = first * second;
+                    break;
+                case '/':
+                    if (second !== 0) {
+                        result = first / second;
+                    } else {
+                        result = 'Error';
+                    }
+                    break;
+            }
+
+            currentInput = result.toString();
+            operator = null;
+            firstOperand = null;
+            screen.innerText = currentInput;
+        }
+    </script>
+
+</body>
+
+</html>
